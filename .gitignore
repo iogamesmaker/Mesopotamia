@@ -49,6 +49,7 @@ index.js
 build/
 Build/
 build-*/
+build_*/
 
 # CMake generated files
 CMakeFiles/
