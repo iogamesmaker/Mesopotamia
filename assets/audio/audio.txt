@@ -1,0 +1,7 @@
+click > click.wav
+NULL > null.wav
+build > construction.mp3
+demolish > demolish.mp3
+farmland > farm.mp3
+buy > purchase.mp3
+water > water.mp3

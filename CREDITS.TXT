@@ -1,0 +1,4 @@
+Music stolen from SNAIL BOB 3, originally composed by Alexander Ahura - ahuraster@gmail.com
+
+Perlin noise: https://github.com/Reputeless/PerlinNoise
+SDL project: https://www.libsdl.org/

@@ -1,0 +1,49 @@
+# overlay.txt
+# specifies something about each tile in the atlas.
+# X COORD - Y COORD - ROTATEABLE? - FLIPPABLE HORI - FLIPPABLE VERT
+# Top left tile is X1, Y1
+
+1 1 false false false # palace towers
+1 3 false false false # house 1
+2 1 false false false # house 2
+3 1 false false false # house 3
+1 2 false false false # palace
+2 2 false false false # lumberjack
+2 3 false false false # farm
+4 4 false false false # figseed
+4 4 false false false # grainseed,
+4 4 false false false # grapeseed
+1 4 false false false # fig
+3 4 false false false # grain
+2 4 false false false # grape
+2 1 false false false # NONE
+1 5 false false false # capital 1 tl
+2 5 false false false # capital 1 tr
+1 6 false false false # capital 1 bl
+2 6 false false false # capital 1 br
+3 5 false false false # capital 2 tl
+4 5 false false false # capital 2 tr
+3 6 false false false # capital 2 bl
+4 6 false false false # capital 2 br
+1 7 false false false # capital 3 tl
+2 7 false false false # capital 3 tr
+1 8 false false false # capital 3 bl
+2 8 false false false # capital 3 br
+3 7 false false false # capital 4 tl
+4 7 false false false # capital 4 tr
+3 8 false false false # capital 4 bl
+4 8 false false false # capital 4 br
+3 2 false false false # zig topleft
+4 2 false false false # zig topright
+3 3 false false false # zig bottomleft
+4 3 false false false # zig bottomright
+
+5 1 false false false # quarry tl
+6 1 false false false # quarry tr
+5 2 false false false # quarry bl
+6 2 false false false # quarry br
+
+5 3 false false false # bakery
+5 4 false false false # farm
+5 5 false false false # water
+6 4 false false false # plains

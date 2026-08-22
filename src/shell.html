@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>Mesopotamia</title>
+    <link rel="shortcut icon" href="icon.ico" type="image/x-icon">
+
+    <style>
+      body {
+        margin: 0;
+        background-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        color: white;
+        font-family: sans-serif;
+      }
+
+      #canvas {
+        border: 0 none;
+        background-color: black;
+        display: block;
+        max-width: 100vw;
+        max-height: 100vh;
+        image-rendering: pixelated;
+        object-fit: contain;
+      }
+
+      #status {
+        position: absolute;
+        color: white;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status">Loading Mesopotamia...</div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+
+    {{{ SCRIPT }}}
+
+    <script type='text/javascript'>
+      var statusElement = document.getElementById('status');
+
+      var Module = {
+        canvas: (function() {
+          var canvas = document.getElementById('canvas');
+          canvas.addEventListener("webglcontextrestored", function() { statusElement.style.display = 'none'; }, false);
+          return canvas;
+        })(),
+        print: function(text) { console.log(text); },
+        onRuntimeInitialized: function() {
+          statusElement.style.display = 'none';
+        }
+      };
+
+      function adjustCanvasSize() {
+        var canvas = document.getElementById('canvas');
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+      }
+      adjustCanvasSize();
+      window.addEventListener('resize', adjustCanvasSize);
+      window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        e.returnValue = '';
+      });
+    </script>
+  </body>
+</html>

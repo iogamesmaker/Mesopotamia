@@ -1,0 +1,37 @@
+./ebuild.sh &
+./wbuild.sh &
+./build.sh &
+
+g++ -std=c++17 src/*.cpp -I./src/ -Os $(pkg-config --cflags --libs sdl2 SDL2_image SDL2_mixer) -o mesopotamia
+echo "Linux built"
+source ~/Emscripten/emsdk/emsdk_env.sh # might cause issues if somebody else tries to compile it for web
+
+emcc src/*.cpp -o index.html \
+    -std=c++17 \
+    -I./src \
+    -Os \
+    --shell-file src/shell.html \
+    -s USE_SDL=2 \
+    -s USE_SDL_IMAGE=2 \
+    -s USE_SDL_MIXER=2 \
+    -s SDL2_IMAGE_FORMATS='["png"]' \
+    -s SDL2_MIXER_FORMATS='["mp3"]' \
+    --preload-file assets@assets \
+    -s ALLOW_MEMORY_GROWTH=1 \
+    -s EXIT_RUNTIME=1
+echo "Enscripten build"
+x86_64-w64-mingw32-windres src/resource.rc -O coff -o src/resource.res
+x86_64-w64-mingw32-g++ -std=c++17 src/*.cpp src/resource.res \
+    -I$HOME/win-libs/SDL2/x86_64-w64-mingw32/include \
+    -I./src \
+    -L$HOME/win-libs/SDL2/x86_64-w64-mingw32/lib \
+    -lmingw32 \
+    -lSDL2_image \
+    -lSDL2_mixer \
+    -lSDL2main \
+    -Os \
+    -lSDL2 \
+    -static-libgcc -static-libstdc++ \
+    -Wl,--subsystem,windows \
+    -o mesopotamia.exe
+echo "Windows built"

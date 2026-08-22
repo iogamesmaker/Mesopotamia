@@ -1,0 +1,73 @@
+# tiles.txt
+# specifies something about each tile in the atlas.
+# X COORD - Y COORD - HEIGHT - ROTATEABLE? - FLIPPABLE HORI - FLIPPABLE VERT
+# Top left tile is X1, Y1
+# HEIGHT is for layering shit things.
+
+
+# PLAINS
+1 1 10 false true false # plains tree pine
+2 1 10 false true false # plains tree oak
+3 1 10 false false false # plains rocks
+4 1 10 false true false # plains sunflower fields
+
+5 1 10 true true true # plains var1
+6 1 10 true true true # plains var2
+
+7 1 10 true true true # plains side
+8 1 10 true true true # plains corner
+9 1 10 true true true # plains inner corner
+10 1 10 true true true # plains enclosed
+11 1 10 true true true # plains filled
+
+# WATER
+1 2 50 false true false # water var1
+2 2 50 false true false # water var2
+3 2 50 false true false # water side EW
+4 2 50 false false true # water side NS
+5 2 50 true true true # water corner
+6 2 50 true true true # water inner corner
+7 2 50 false true false # water enclosed1
+8 2 50 false true false # water enclosed2
+9 2 50 false true false # water filled
+
+# DESERT
+1 3 30 false false false # desert hole
+2 3 30 false false false # desert dead shrub
+3 3 30 false false false # desert fossil
+4 3 30 false false false # desert cacti
+5 3 30 false false false # desert empty
+
+6 3 30 false false false # desert side E
+7 3 30 false false false # desert side W
+15 2 30 false false false # desert side N
+15 1 30 false false false # desert side S
+
+8 3 30 true true true # desert corner
+
+9 3 30 false false false # desert inner corner NW
+10 3 30 false false false # desert inner corner NE
+11 3 30 false false false # desert inner corner SW
+12 3 30 false false false # desert inner corner SE
+
+13 3 30 false false false # desert enclosed1
+14 3 30 false false false # desert enclosed2
+15 3 30 false false false # desert enclosed3
+16 3 30 false false false # desert enclosed4
+
+13 4 30 false false false # desert filled
+
+# FARM
+
+13 1 5 false false false # farm saturated
+14 1 5 false false false # farm desaturated
+
+# CLOUD
+10 2 1000 false false false # cloud
+11 2 1000 true true true # cloud side
+12 2 1000 true true true # cloud inner corner
+
+# OTHER
+14 2 -9998 true true true # EMPTY
+16 1 -9999 true true true # NULL
+16 2 9999 true true true # SELECTOR
