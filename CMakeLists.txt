@@ -56,9 +56,11 @@ else()
         $<TARGET_NAME_IF_EXISTS:SDL2_mixer::SDL2_mixer-static>
     )
 
-	target_link_options(${PROJECT_NAME} PRIVATE 
+	target_link_options(${PROJECT_NAME} PRIVATE
 		"-static"
 		"-static-libgcc" 
 		"-static-libstdc++"
+		"-s"
+		"-Wl,--gc-sections"
 	)
 endif()

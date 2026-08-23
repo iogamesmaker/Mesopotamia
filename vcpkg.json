@@ -1,14 +1,16 @@
 {
   "name": "mesopotamia",
-  "version-string": "0.1.0",
+  "version": "1.0.0",
   "dependencies": [
     "sdl2",
-    "sdl2-image",
+    {
+      "name": "sdl2-image",
+      "default-features": false
+    },
     {
       "name": "sdl2-mixer",
-      "features": [
-        "mpg123"
-      ]
+      "default-features": false,
+      "features": ["mpg123"] 
     }
   ]
 }

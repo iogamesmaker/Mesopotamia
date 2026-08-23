@@ -7,14 +7,6 @@
 
 tileManager::tileManager(int worldBigness, int seed) {
 
-    lapis += 1000;
-    figs += 1000;
-    grain += 1000;
-    bricks += 1000;
-    bread += 1000;
-    grapes += 1000;
-    wood += 1000;
-
     worldSize = worldBigness; // 10/10 1337 h4xx07
 
     worldMap.resize(worldSize, std::vector<Point>(worldSize)); // 🙻🙻🙻🙻🙻🙻🙹
@@ -248,15 +240,15 @@ void tileManager::openTraderMenu(int rngThing) {
                     int hash = genHash(SDL_GetTicks(), seed + rngThing + skips + turn) % 4;
                     if(hash == 0) type = ITEM_WOOD;
                     if(hash == 1) type = ITEM_BRICKS;
-                    if(hash == 2) type = ITEM_SLAVES;
+                    if(hash == 2) type = ITEM_PEOPLE;
                     if(hash == 3) type = ITEM_WOOD;
 
                     rngThing++;
                     int hash2 = genHash(SDL_GetTicks(), seed + rngThing + skips + turn) % 6;
-                    if(hash2 == 0) costtype = ITEM_PEOPLE;
+                    if(hash2 == 0) costtype = ITEM_FIGS;
                     if(hash2 == 1) costtype = ITEM_FIGS;
-                    if(hash2 == 2) costtype = ITEM_PEOPLE;
-                    if(hash2 == 3) costtype = ITEM_PEOPLE;
+                    if(hash2 == 2) costtype = ITEM_SLAVES;
+                    if(hash2 == 3) costtype = ITEM_SLAVES;
                     if(hash2 == 4) costtype = ITEM_WOOD;
                     if(hash2 == 5) costtype = ITEM_BRICKS;
                 } else {
@@ -280,10 +272,6 @@ void tileManager::openTraderMenu(int rngThing) {
                 }
                 cost = 0.2 * amount * (1 + genHash(SDL_GetTicks() + seed + rngThing + skips + turn - 1) % 3);
                 cost = std::floor(std::max(cost, 1));
-                if(turn == 2) {
-                    cost = std::min(4, cost);
-                }
-                // if(turn == 2) cost = 2;
             }
         }
         if(i == 1) {
@@ -310,14 +298,18 @@ void tileManager::openTraderMenu(int rngThing) {
                 if(type == ITEM_FIGS)       figs        += amount;
                 if(type == ITEM_BRICKS)     bricks      += amount;
                 if(type == ITEM_WOOD)       wood        += amount;
-                if(type == ITEM_SLAVES)     {population += amount;workers += amount;population = std::min(cap, population);}
-                if(type == ITEM_PEOPLE)     {workers    += amount;population = std::min(cap, population);}
+                if(type == ITEM_PEOPLE) 	workers 	+= amount;
+                if(type == ITEM_SLAVES) {
+					int growth = cap - std::min(cap, population + amount);
+					workers    += growth;
+					population = std::min(cap, population + amount);
+				}
                 if(type == UNLOCK_BREAD)    breadUnlocked= true;
                 if(type == UNLOCK_GRAPES)   grapesUnlocked=true;
                 if(type == SHOP_RELOAD)     skips++;
             };
 
-            if(type == ITEM_PEOPLE || type == ITEM_SLAVES) {
+            if(type == ITEM_SLAVES) {
                 if(population >= cap) {
                     population = cap;
                     setStatus("Poplulation cap reached");
@@ -382,7 +374,7 @@ void tileManager::openTraderMenu(int rngThing) {
                 } else {setStatus("Too expensive.");}
             } else
             if(costtype == ITEM_SLAVES && okay) {
-                if(population + 2 >= cost) {
+                if(population - 2 >= cost) {
                     population -= cost;
                     gain();
                     openTraderMenu(rngThing);
@@ -591,17 +583,58 @@ void tileManager::handleTurn() {
 
     }
     for(int i = 0; i < population; i++) {
+		
+		if(bread + figs + grapes <= 0) {
+			tooLittleFood++;
+		} else {
+			bool ate = false;
+			int j = 0;
+			while(!ate) {
+				if(j > 100) {
+					std::cout << "warning: eat loop1" <<  std::endl;
+					tooLittleFood++;
+					ate = true;
+				}
+				ItemType foodType = static_cast<ItemType>(ITEM_FIGS + genHash(turn + j + seed + population + 9 + 10 + 21) % 3);
+				switch(foodType) {
+					case ITEM_FIGS:
+						if(figs >= 1) {
+							figs--;
+							ate = true;
+						}
+						break;
+					case ITEM_BREAD:
+						if(bread >= 1) {
+							bread--;
+							ate = true;
+						}
+						break;
+					case ITEM_GRAPES:
+						if(grapes >= 1) {
+							grapes--;
+							ate = true;
+						}
+						break;
+					default:
+						ate = false;
+						break;
+				}
+				j++;
+			}
+		}
+		
         if(i % 2 == 1) { // every 2 people check if they can make a baby
             if(bread + figs + grapes > population + toAdd && cap > population + toAdd) {
                 bool ate = false;
-                if(bread > 0) {bread -= 1;} else
-                if(grapes > 0){grapes-= 1;} else
-                if(figs > 0)  {figs  -= 1;} else {
-                    setStatus("??????? tileManager::handleTurn");
-                }
-                int i;
+				
+                int j;
                 while(!ate) {
-                    ItemType foodType = static_cast<ItemType>(ITEM_FIGS + genHash(turn + i + seed + population) % 3);
+					if(j > 100) {
+						std::cout << "warning: eat loop " <<  std::endl;
+						tooLittleFood++;
+						ate = true;
+					}
+                    ItemType foodType = static_cast<ItemType>(ITEM_FIGS + genHash(turn + j + seed + population) % 3);
                     switch(foodType) {
                         case ITEM_FIGS:
                             if(figs >= 1) {
@@ -625,16 +658,10 @@ void tileManager::handleTurn() {
                             ate = false;
                             break;
                     }
-                    i++;
+                    j++;
                 }
                 toAdd++;
             }
-        }
-
-        if(figs  > 0) {figs  -= 1;} else
-        if(bread > 0) {bread -= 1;} else
-        if(grapes> 0) {grapes-= 1;} else {
-            tooLittleFood++;
         }
     }
     if(tooLittleFood != 0) {
@@ -670,18 +697,18 @@ void tileManager::handleTurn() {
         if(population == cap) {newStatus += "\nShortage of people.\nBuild more houses!";}
         else  {newStatus += "\nShortage of people.\nIncrease food production!";}
     }
-	std::cout << "unemployed: " << std::to_string(unemployed) << std::endl;
-	std::cout << "population: " << std::to_string(population) << std::endl;
+	//std::cout << "unemployed: " << std::to_string(unemployed) << std::endl;
+	//std::cout << "population: " << std::to_string(population) << std::endl;
 	float ratio = (float)population / unemployed;
 	if(unemployed == 0) ratio = 0;
-	std::cout << "ratio: " << std::to_string(ratio) << std::endl;
+	//std::cout << "ratio: " << std::to_string(ratio) << std::endl;
 	if(unemployed > 0) {happiness += std::round(ratio * 1.5);}
 	else {happiness += std::round(4.0 * ratio);}	
 
     happiness = std::clamp(happiness, 0, 100);
 
     if(happiness != oldHappiness) {
-		std::cout << std::to_string(happiness - oldHappiness) << std::endl;
+		//std::cout << std::to_string(happiness - oldHappiness) << std::endl;
         if(happiness > oldHappiness) {
             newStatus += "\nYour people got happier.";
         } else {
@@ -1298,7 +1325,7 @@ void tileManager::openMenu(int x, int y) {
         std::string newStatus;
         switch(toOpen.overlay) {
             case HOUSE1:
-                newStatus = "House 5 people. Upgrading costs:\n2 brick, 1 wood\nRequires Capitol level 2.";
+                newStatus = "House 5 people. Upgrading costs:\n2 bricks, 1 wood\nRequires Capitol level 2.";
                 GUI->enableButton("upgrade");
                 break;
             case HOUSE2:
@@ -1316,7 +1343,7 @@ void tileManager::openMenu(int x, int y) {
         GUI->buttonChangeFunction("upgrade", [this, x, y, toOpen](){ // the shit in the brackets is what the function has access to
                                                                      // "this" is just the current class apparently
             if(toOpen.overlay == HOUSE1 && capitalLevel != 1) {
-                if(bricks >= 5 && wood >= 5) {
+                if(bricks >= 2 && wood >= 1) {
                     wood -= 1;
                     bricks -= 2;
                     worldMap[x + worldSize * 0.5][y + worldSize * 0.5].overlay = HOUSE2;
@@ -1326,7 +1353,7 @@ void tileManager::openMenu(int x, int y) {
                     setStatus("Too poor.");
                 }
             } else if (toOpen.overlay == HOUSE2 && capitalLevel != 2) {
-                if(bricks >= 5 && wood >= 5) {
+                if(bricks >= 5 && wood >= 2) {
                     wood -= 2;
                     bricks -= 5;
                     worldMap[x + worldSize * 0.5][y + worldSize * 0.5].overlay = HOUSE3;
